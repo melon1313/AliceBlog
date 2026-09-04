@@ -2,35 +2,21 @@ import type { ReactNode, SVGProps } from "react";
 
 export function Logo(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden {...props}>
-      <defs>
-        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#f0b350" />
-          <stop offset="1" stopColor="#5fd6c4" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="9" fill="url(#logoGrad)" />
-      <path
-        d="M9 8l6 8-6 8M16 8l6 8-6 8"
-        stroke="#0c1a1c"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+    <svg width="30" height="30" viewBox="0 0 34 34" fill="none" aria-hidden {...props}>
+      <circle cx="11.5" cy="7" r="4.5" fill="#d3232a" stroke="#1b1b1b" strokeWidth="2" />
+      <circle cx="22.5" cy="7" r="4.5" fill="#d3232a" stroke="#1b1b1b" strokeWidth="2" />
+      <rect
+        x="2.5"
+        y="9.5"
+        width="29"
+        height="22"
+        rx="3.5"
+        fill="#d3232a"
+        stroke="#1b1b1b"
+        strokeWidth="2"
       />
-    </svg>
-  );
-}
-
-export function Chevron(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
-      <path
-        d="M5 4l7 8-7 8M12 4l7 8-7 8"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <circle cx="11.5" cy="20.5" r="3" fill="#1b1b1b" fillOpacity="0.18" />
+      <circle cx="22.5" cy="20.5" r="3" fill="#1b1b1b" fillOpacity="0.18" />
     </svg>
   );
 }
@@ -83,11 +69,11 @@ export const CONTACT_ICONS = {
 
 /* Code editor panel — the hero visual (replaces the profile photo). */
 export function CodePanel() {
-  const k = "text-violet"; // keyword
-  const t = "text-amber"; // type
-  const m = "text-fg"; // identifier / member
-  const p = "text-fg-dim"; // punctuation
-  const cm = "text-fg-faint italic"; // comment
+  const k = "text-[#e2a06a]"; // keyword
+  const t = "text-[#7fd6c0]"; // type
+  const m = "text-[#e9e5f4]"; // identifier / member
+  const p = "text-[#a9a3c4]"; // punctuation
+  const cm = "text-[#847ea6] italic"; // comment
 
   const lines: ReactNode[] = [
     <>
@@ -157,26 +143,29 @@ export function CodePanel() {
   ];
 
   return (
-    <div className="relative mx-auto w-full max-w-md lg:max-w-lg">
+    <div
+      className="studs relative mx-auto mt-3 w-full max-w-md lg:max-w-lg"
+      style={{ ["--stud" as string]: "#3a3a3a" }}
+    >
       <div
         aria-hidden
-        className="absolute -inset-8 -z-10 rounded-[2.5rem] bg-[radial-gradient(55%_55%_at_62%_38%,rgba(95,214,196,0.18),transparent_70%)] blur-2xl"
+        className="absolute -inset-6 -z-10 rounded-[2rem] bg-amber/25 blur-2xl"
       />
 
-      <div className="glass overflow-hidden rounded-2xl">
+      <div className="overflow-hidden rounded-2xl border-[3px] border-black bg-[#1b1b1b] shadow-[0_10px_0_rgba(0,0,0,0.25),0_28px_44px_-20px_rgba(0,0,0,0.5)]">
         {/* title bar */}
-        <div className="flex items-center gap-2 border-b border-hair px-4 py-3">
-          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.04] px-4 py-3">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
           <span
-            className="ml-3 text-xs text-fg-dim"
+            className="ml-3 text-xs text-[#b7b1d0]"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             Wallet.cs
           </span>
           <span
-            className="ml-auto rounded-md border border-hair px-1.5 py-0.5 text-[10px] font-semibold text-amber"
+            className="ml-auto rounded-md border border-white/15 px-1.5 py-0.5 text-[10px] font-semibold text-[#7fd6c0]"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             C#
@@ -185,13 +174,13 @@ export function CodePanel() {
 
         {/* code body */}
         <pre
-          className="overflow-x-auto px-4 py-4 text-[12.5px] leading-6 sm:text-[13px]"
+          className="overflow-x-auto px-4 py-4 text-[12.5px] leading-6 text-[#e9e5f4] sm:text-[13px]"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           <code className="grid grid-cols-[1.4rem_1fr] gap-x-4">
             {lines.map((line, i) => (
               <div key={i} className="contents">
-                <span className="select-none text-right text-fg-faint/50">
+                <span className="select-none text-right text-[#6f6a8f]">
                   {i + 1}
                 </span>
                 <span className="whitespace-pre">{line}</span>
@@ -202,12 +191,12 @@ export function CodePanel() {
       </div>
 
       {/* floating status badge */}
-      <div className="animate-floaty glass absolute -bottom-5 -left-3 flex items-center gap-2 rounded-xl px-3 py-2 text-xs sm:-left-8">
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet/20 text-violet">
+      <div className="animate-floaty glass absolute -bottom-6 -left-3 flex items-center gap-2 px-3 py-2 text-xs sm:-left-8">
+        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-lego-green text-white">
           ✓
         </span>
-        <span className="text-fg">
-          單元測試 <b className="font-semibold text-violet">87 passing</b>
+        <span className="font-semibold text-fg">
+          單元測試 <b className="text-lego-green">87 passing</b>
         </span>
       </div>
     </div>
