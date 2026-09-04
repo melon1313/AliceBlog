@@ -48,7 +48,7 @@ export function SiteHeader() {
             <a
               key={n.href}
               href={n.href}
-              className="text-sm font-medium text-fg transition-colors hover:text-cyan"
+              className="text-sm text-fg-dim transition-colors hover:text-cyan"
             >
               {n.label}
             </a>
@@ -66,7 +66,7 @@ export function SiteHeader() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-fg-dim transition-colors hover:bg-black/5 md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-fg-dim transition-colors hover:bg-white/5 md:hidden"
           aria-label="開啟選單"
           aria-expanded={open}
         >
@@ -92,7 +92,7 @@ export function SiteHeader() {
 
       <span
         aria-hidden
-        className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-gradient-to-r from-lego-yellow to-lego-red transition-transform duration-150"
+        className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-gradient-to-r from-cyan to-violet transition-transform duration-150"
         style={{ transform: `scaleX(${progress})` }}
       />
 
@@ -104,7 +104,7 @@ export function SiteHeader() {
                 key={n.href}
                 href={n.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-2.5 text-sm font-medium text-fg transition-colors hover:bg-black/5 hover:text-cyan"
+                className="rounded-lg px-2 py-2.5 text-sm text-fg-dim transition-colors hover:bg-white/5 hover:text-cyan"
               >
                 {n.label}
               </a>
