@@ -382,6 +382,9 @@ export default function Home() {
               我準備了一個支付錢包的 POC，運用了 OOP、DDD 等架構與技術，
               很樂意和你（貴公司）一起討論交流。
             </p>
+            <p className="mt-3 max-w-xl text-[14px] leading-7 text-fg-faint">
+              想知道這份履歷跟你的 JD 合不合？右下角的 AI 助理可以幫你比對，或直接問它任何關於我的問題。
+            </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="mailto:alicechung135@gmail.com" className="btn btn-primary">
                 寄信給我
