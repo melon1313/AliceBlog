@@ -110,7 +110,9 @@ export default function Home() {
                 BACKEND ENGINEER
               </p>
               <a
-                href="/blog"
+                href="https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="chip inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium text-fg-dim transition-colors hover:text-cyan"
               >
                 <PenIcon className="h-3 w-3" />
