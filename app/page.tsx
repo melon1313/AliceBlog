@@ -103,7 +103,12 @@ export default function Home() {
         </div>
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pb-28 lg:pt-24">
-          <div>
+          {/* `min-w-0` is required here: a CSS grid item won't shrink below
+              its content's min-content width by default, so without it this
+              column (and everything inside it — the button row, the stats
+              grid) refuses to shrink on narrow phones and the whole page
+              overflows horizontally instead of wrapping. */}
+          <div className="min-w-0">
             <div className="hero-in flex flex-wrap items-center gap-2.5">
               <p className="inline-flex items-center gap-2 rounded-full border border-hair bg-white/5 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.28em] text-cyan backdrop-blur-sm">
                 <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-cyan" />
@@ -149,16 +154,16 @@ export default function Home() {
             </p>
 
             <div
-              className="hero-in mt-8 flex flex-wrap gap-3"
+              className="hero-in mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-row sm:flex-wrap"
               style={{ animationDelay: "400ms" }}
             >
-              <a href="#projects" className="btn btn-primary">
+              <a href="#projects" className="btn btn-primary col-span-2 justify-self-start">
                 查看專案經驗
               </a>
               <a href="#contact" className="btn btn-ghost">
                 聯絡我
               </a>
-              <DownloadResumeButton />
+              <DownloadResumeButton className="btn btn-ghost" />
             </div>
 
             <dl
@@ -184,8 +189,11 @@ export default function Home() {
             </dl>
           </div>
 
-          {/* code editor panel */}
-          <Parallax speed={0.05} className="relative mx-auto w-full max-w-md lg:max-w-none">
+          {/* code editor panel — `min-w-0` for the same reason as the text
+              column above: without it this grid item won't shrink below the
+              code block's unwrapped line width, and the whole panel (plus
+              everything to its left) overflows the viewport on narrow phones. */}
+          <Parallax speed={0.05} className="relative mx-auto min-w-0 w-full max-w-md lg:max-w-none">
             <CodePanel />
           </Parallax>
         </div>
@@ -407,8 +415,8 @@ export default function Home() {
             <p className="mt-5 max-w-xl text-[14px] leading-7 text-fg-faint">
               想知道這份履歷跟你的 JD 合不合？右下角的 AI 助理可以幫你比對，或直接問它任何關於我的問題。
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="mailto:alicechung135@gmail.com" className="btn btn-primary">
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-row sm:flex-wrap">
+              <a href="mailto:alicechung135@gmail.com" className="btn btn-primary col-span-2 justify-self-start">
                 寄信給我
               </a>
               <a
@@ -419,7 +427,7 @@ export default function Home() {
               >
                 查看 GitHub
               </a>
-              <DownloadResumeButton />
+              <DownloadResumeButton className="btn btn-ghost" />
             </div>
           </Reveal>
 

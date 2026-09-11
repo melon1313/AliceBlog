@@ -56,14 +56,14 @@ export default async function BlogArticlePage({ params }: PageProps) {
       </article>
 
       <p className="mt-12 border-t border-hair pt-6 text-[13px] text-fg-faint">
-        原文出處（Notion）：{" "}
+        原文出處：{" "}
         <a
           href={item.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-cyan underline decoration-cyan/40 underline-offset-2 hover:decoration-cyan"
         >
-          {item.sourceUrl}
+          在 Notion 閱讀原文
         </a>
       </p>
     </div>
