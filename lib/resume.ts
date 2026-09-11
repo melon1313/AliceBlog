@@ -129,6 +129,94 @@ export const PROJECTS: Project[] = [
   },
 ];
 
+export type WritingItem = { title: string; summary: string; href: string };
+
+/** 技術文章精選（Notion：https://aliceeazylearn.notion.site）。 */
+export const WRITING: WritingItem[] = [
+  {
+    title: "在 LINQPad 上安裝測試框架：xUnit",
+    summary:
+      "記錄公司舊專案升級 .NET 6 過程中，如何在 LINQPad 安裝 xUnit，加快重構驗證的效率。",
+    href: "https://aliceeazylearn.notion.site/LINQPad-xUnit-bd36b67f7c6e4c879cda9cd669d5f971",
+  },
+  {
+    title: "ASP.NET Core 建立設定檔管理員",
+    summary:
+      "說明如何建立強型別設定檔管理員取代 IConfiguration 字串索引寫法，提升設定維護性。",
+    href: "https://aliceeazylearn.notion.site/ASP-NET-Core-f38d9dc8a95244428987c121fd506f6a",
+  },
+  {
+    title: "C# 簡單說－泛型類(1)",
+    summary:
+      "以情境故事解釋泛型的設計動機，說明如何用泛型解決重複程式碼與型別安全問題。",
+    href: "https://aliceeazylearn.notion.site/C-1-a1815c3ecf6642b4a3cb33f3534a5cb8",
+  },
+  {
+    title: "經典 RESTful API 設計－(1) REST 介紹",
+    summary: "系統性整理 REST 的 6 個架構約束與 RESTful API 設計原則。",
+    href: "https://aliceeazylearn.notion.site/RESTful-API-1-REST-ea660fef07284bcda8afa4b7d42dbd4e",
+  },
+  {
+    title: "URI、URL、URN 傻傻分不清",
+    summary: "釐清 URI/URL/URN 的定義與從屬關係，並舉實例說明正確用法。",
+    href: "https://aliceeazylearn.notion.site/URI-URL-URN-4ad7cb4cb4714fb29c782f143b8b3568",
+  },
+  {
+    title: "[踩坑] ASP.Net gRPC 服務路徑錯誤",
+    summary:
+      "排查 gRPC 專案因 Windows 使用者名稱含中文導致 protoc 編譯失敗的除錯過程。",
+    href: "https://aliceeazylearn.notion.site/ASP-Net-gRPC-protoc-gen-grpc-The-filename-directory-name-or-volume-label-syntax-is-incorrect-57239cfc9f50414bae4ba9494a055dc7",
+  },
+  {
+    title: "[踩坑] Docker portainer port 衝突",
+    summary:
+      "排查 Docker 容器 port 9000 綁定失敗的原因（落在 Windows TCP 保留區段）與解法。",
+    href: "https://aliceeazylearn.notion.site/Docker-Cannot-start-service-portainer-Ports-are-not-available-listen-tcp-0-0-0-0-9000-8af4e2f75fc84dfa94324449376919da",
+  },
+  {
+    title: "[踩坑] grpc.core.rpcexception internal",
+    summary:
+      "記錄 .NET gRPC Client/Server 未用 SSL/TLS 時因版本設定不符導致連線錯誤的修正方式。",
+    href: "https://aliceeazylearn.notion.site/grpc-core-rpcexception-status-statuscode-internal-detail-8ef41134e3c14c36ab05ceab298fed6d",
+  },
+];
+
+export type SideProject = { name: string; summary: string; href: string };
+
+/** GitHub 置頂專案（https://github.com/melon1313）。 */
+export const SIDE_PROJECTS: SideProject[] = [
+  {
+    name: "AppSettingsManager",
+    summary: "C# 設定檔管理工具，跟「ASP.NET Core 建立設定檔管理員」一文互相呼應。",
+    href: "https://github.com/melon1313/AppSettingsManager",
+  },
+  {
+    name: "AspnetMicroservices",
+    summary: "微服務架構練習專案。",
+    href: "https://github.com/melon1313/AspnetMicroservices",
+  },
+  {
+    name: "Restful_WebAPI_with_DotNetCore",
+    summary: "以 .NET Core 實作 RESTful Web API，呼應 REST 系列文章。",
+    href: "https://github.com/melon1313/Restful_WebAPI_with_DotNetCore",
+  },
+  {
+    name: "LINQSample",
+    summary: "LINQ 語法示範專案，呼應「在 LINQPad 上安裝測試框架」一文。",
+    href: "https://github.com/melon1313/LINQSample",
+  },
+  {
+    name: "bs5_project",
+    summary: "Bootstrap 5 前端練習專案。",
+    href: "https://github.com/melon1313/bs5_project",
+  },
+  {
+    name: "Make-Game-by-CSharp-Winform",
+    summary: "以 C# WinForm 開發的小遊戲練習專案。",
+    href: "https://github.com/melon1313/Make-Game-by-CSharp-Winform",
+  },
+];
+
 export type TimelineItem = {
   title: string;
   org: string;
@@ -210,6 +298,12 @@ export function buildResumeContext(): string {
 
   L.push("", "## 技術能力");
   SKILLS.forEach((grp) => L.push(`- ${grp.label}：${grp.items.join("、")}`));
+
+  L.push("", "## 技術文章（Notion）");
+  WRITING.forEach((w) => L.push(`- ${w.title}：${w.summary}（${w.href}）`));
+
+  L.push("", "## GitHub 專案");
+  SIDE_PROJECTS.forEach((p) => L.push(`- ${p.name}：${p.summary}（${p.href}）`));
 
   L.push("", "## 聯絡方式");
   CONTACTS.forEach((c) => L.push(`- ${c.label}（${c.href}）`));

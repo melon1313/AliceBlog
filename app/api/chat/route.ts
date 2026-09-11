@@ -6,7 +6,7 @@
 /*  never cached, so no route-segment config is needed.               */
 /* ------------------------------------------------------------------ */
 
-import { getGemini, GEMINI_MODEL, GEN_LIMITS } from "@/lib/gemini";
+import { getOpenAI, OPENAI_MODEL, GEN_LIMITS } from "@/lib/openai";
 import { buildChatSystemPrompt } from "@/lib/prompt";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
@@ -66,23 +66,23 @@ export async function POST(request: Request) {
     return jsonError(400, "最後一則訊息必須是使用者的提問。");
   }
 
-  let iterable: AsyncGenerator<{ text?: string }>;
+  let iterable: AsyncIterable<{
+    choices: Array<{ delta?: { content?: string | null } }>;
+  }>;
   try {
-    const ai = getGemini();
-    iterable = await ai.models.generateContentStream({
-      model: GEMINI_MODEL,
-      config: {
-        systemInstruction: buildChatSystemPrompt(),
-        maxOutputTokens: GEN_LIMITS.chat.maxOutputTokens,
-        temperature: GEN_LIMITS.chat.temperature,
-      },
-      contents: messages.map((m) => ({
-        role: m.role === "assistant" ? "model" : "user",
-        parts: [{ text: m.content }],
-      })),
+    const ai = getOpenAI();
+    iterable = await ai.chat.completions.create({
+      model: OPENAI_MODEL,
+      stream: true,
+      max_completion_tokens: GEN_LIMITS.chat.maxOutputTokens,
+      reasoning_effort: "none",
+      messages: [
+        { role: "developer", content: buildChatSystemPrompt() },
+        ...messages.map((m) => ({ role: m.role, content: m.content })),
+      ],
     });
   } catch (err) {
-    console.error("[/api/chat] gemini init error", err);
+    console.error("[/api/chat] openai init error", err);
     return jsonError(502, "AI 服務暫時無法使用，請稍後再試。");
   }
 
@@ -91,7 +91,8 @@ export async function POST(request: Request) {
     async start(controller) {
       try {
         for await (const chunk of iterable) {
-          if (chunk.text) controller.enqueue(encoder.encode(chunk.text));
+          const text = chunk.choices[0]?.delta?.content;
+          if (text) controller.enqueue(encoder.encode(text));
         }
       } catch (err) {
         // Status is already sent; just stop. Client shows a "中斷" note.

@@ -2,7 +2,6 @@
 /*  System prompts + structured-output schema for the AI assistant.   */
 /* ------------------------------------------------------------------ */
 
-import { Type, type Schema } from "@google/genai";
 import { PROFILE, RESUME_CONTEXT } from "@/lib/resume";
 
 /* ---- chat: "ask my résumé" assistant ---- */
@@ -48,36 +47,44 @@ ${RESUME_CONTEXT}
 === 結束 ===`;
 }
 
-/** Passed to config.responseSchema so the model returns a JdMatchResult. */
-export const JD_MATCH_SCHEMA: Schema = {
-  type: Type.OBJECT,
+/**
+ * Passed as response_format.json_schema.schema so the model returns a
+ * JdMatchResult. OpenAI's strict structured-output mode requires every
+ * property to be listed in `required` and `additionalProperties: false`
+ * on every object level.
+ */
+export const JD_MATCH_SCHEMA = {
+  type: "object",
   properties: {
-    verdict: { type: Type.STRING, enum: ["strong", "partial", "weak"] },
-    score: { type: Type.INTEGER, minimum: 0, maximum: 100 },
-    summary: { type: Type.STRING },
+    verdict: { type: "string", enum: ["strong", "partial", "weak"] },
+    score: { type: "integer", minimum: 0, maximum: 100 },
+    summary: { type: "string" },
     matchPoints: {
-      type: Type.ARRAY,
+      type: "array",
       items: {
-        type: Type.OBJECT,
+        type: "object",
         properties: {
-          jdRequirement: { type: Type.STRING },
-          evidence: { type: Type.STRING },
+          jdRequirement: { type: "string" },
+          evidence: { type: "string" },
         },
         required: ["jdRequirement", "evidence"],
+        additionalProperties: false,
       },
     },
     gaps: {
-      type: Type.ARRAY,
+      type: "array",
       items: {
-        type: Type.OBJECT,
+        type: "object",
         properties: {
-          jdRequirement: { type: Type.STRING },
-          note: { type: Type.STRING },
+          jdRequirement: { type: "string" },
+          note: { type: "string" },
         },
         required: ["jdRequirement", "note"],
+        additionalProperties: false,
       },
     },
-    pitch: { type: Type.STRING },
+    pitch: { type: "string" },
   },
   required: ["verdict", "score", "summary", "matchPoints", "gaps", "pitch"],
-};
+  additionalProperties: false,
+} as const;

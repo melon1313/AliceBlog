@@ -18,26 +18,26 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 履歷 AI 助理（Gemini）
+## 履歷 AI 助理（OpenAI）
 
 網站右下角的「問我的履歷」助理有兩個功能：**問答**（串流回答，只根據 `lib/resume.ts` 的履歷內容）與
 **JD 比對**（貼上職缺描述，回傳結構化契合度分析）。
 
 ### 設定
 
-1. 到 [Google AI Studio](https://aistudio.google.com/apikey) 建立一組 API key。
+1. 到 [OpenAI Platform](https://platform.openai.com/api-keys) 建立一組 API key。
 2. 在專案根目錄建立 `.env.local`（不會被 commit）：
 
    ```
-   GEMINI_API_KEY=你的金鑰
-   # 選用，預設 gemini-flash-lite-latest
-   GEMINI_MODEL=
+   OPENAI_API_KEY=你的金鑰
+   # 選用，預設 gpt-5.6-luna
+   OPENAI_MODEL=
    ```
 
 3. `npm run dev`，開 http://localhost:3000，點右下角的助理。
 
-部署到 Vercel 時，在 **Settings → Environment Variables** 加 `GEMINI_API_KEY`（Production + Preview），
-然後重新部署。金鑰只在伺服器端使用（`lib/gemini.ts`），**切勿加 `NEXT_PUBLIC_` 前綴**。
+部署到 Vercel 時，在 **Settings → Environment Variables** 加 `OPENAI_API_KEY`（Production + Preview），
+然後重新部署。金鑰只在伺服器端使用（`lib/openai.ts`），**切勿加 `NEXT_PUBLIC_` 前綴**。
 
 ### 相關檔案與注意事項
 
@@ -46,7 +46,7 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - 防濫用是輕量做法：輸入長度上限、輸出 token 上限、同源檢查，加上 `lib/rate-limit.ts` 的
   **記憶體內**單一 IP 速率限制。記憶體狀態是 per serverless instance，冷啟動 / 部署會重置，
   實際上限約等於 `limit × 同時存活的 instance 數`。要更嚴謹的話，把 `lib/rate-limit.ts`
-  內部換成 Vercel KV / Upstash 即可，呼叫端不用動。另建議在 Google Cloud 設定預算警示。
+  內部換成 Vercel KV / Upstash 即可，呼叫端不用動。另建議在 OpenAI Platform 設定用量上限 / 預算警示。
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 

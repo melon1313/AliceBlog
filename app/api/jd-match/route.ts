@@ -4,7 +4,7 @@
 /*  Node runtime (no `runtime` export); POST is never cached.         */
 /* ------------------------------------------------------------------ */
 
-import { getGemini, GEMINI_MODEL, GEN_LIMITS } from "@/lib/gemini";
+import { getOpenAI, OPENAI_MODEL, GEN_LIMITS } from "@/lib/openai";
 import { buildJdSystemPrompt, JD_MATCH_SCHEMA } from "@/lib/prompt";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
@@ -44,21 +44,27 @@ export async function POST(request: Request) {
 
   let text: string;
   try {
-    const ai = getGemini();
-    const res = await ai.models.generateContent({
-      model: GEMINI_MODEL,
-      config: {
-        systemInstruction: buildJdSystemPrompt(),
-        maxOutputTokens: GEN_LIMITS.jd.maxOutputTokens,
-        temperature: GEN_LIMITS.jd.temperature,
-        responseMimeType: "application/json",
-        responseSchema: JD_MATCH_SCHEMA,
+    const ai = getOpenAI();
+    const res = await ai.chat.completions.create({
+      model: OPENAI_MODEL,
+      max_completion_tokens: GEN_LIMITS.jd.maxOutputTokens,
+      reasoning_effort: "none",
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "jd_match_result",
+          schema: JD_MATCH_SCHEMA,
+          strict: true,
+        },
       },
-      contents: [{ role: "user", parts: [{ text: jd }] }],
+      messages: [
+        { role: "developer", content: buildJdSystemPrompt() },
+        { role: "user", content: jd },
+      ],
     });
-    text = res.text ?? "";
+    text = res.choices[0]?.message?.content ?? "";
   } catch (err) {
-    console.error("[/api/jd-match] gemini error", err);
+    console.error("[/api/jd-match] openai error", err);
     return jsonError(502, "AI 服務暫時無法使用，請稍後再試。");
   }
 

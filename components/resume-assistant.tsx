@@ -588,7 +588,7 @@ export function ResumeAssistant() {
 
       {/* disclosure */}
       <p className="border-t border-hair px-4 py-2 text-center text-[11px] text-fg-faint">
-        由 Gemini 生成，僅根據本網站的履歷內容，可能有誤。
+        由 OpenAI 生成，僅根據本網站的履歷內容，可能有誤。
       </p>
     </div>
   );
