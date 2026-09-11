@@ -217,7 +217,13 @@ article pre[data-language] [data-highlighted-line] {
   display: flex;
   flex-direction: column;
   width: min(26rem, calc(100vw - 2.5rem));
+  /* `dvh` tracks the actual visible viewport (shrinks when the on-screen
+     keyboard opens, e.g. after tapping a suggestion chip focuses the
+     textarea) — plain `vh` doesn't, and the panel would end up taller
+     than the visible screen. `vh` line is the fallback for browsers
+     without `dvh` support. */
   height: min(34rem, calc(100vh - 3rem));
+  height: min(34rem, calc(100dvh - 3rem));
   border-radius: 1.25rem;
   overflow: hidden;
   animation: assistantIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -324,7 +330,8 @@ article pre[data-language] [data-highlighted-line] {
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 82vh;
+    height: 82vh; /* fallback */
+    height: 82dvh;
     border-radius: 1rem 1rem 0 0;
     padding-bottom: env(safe-area-inset-bottom);
   }
