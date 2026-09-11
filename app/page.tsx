@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Chevron, CodePanel, CONTACT_ICONS } from "@/components/icons";
+import { Chevron, CodePanel, CONTACT_ICONS, PenIcon } from "@/components/icons";
 import { CONTACTS } from "@/components/site-data";
 import { Parallax, Reveal, CountUp } from "@/components/motion";
 import { DownloadResumeButton } from "@/components/download-resume-button";
@@ -104,10 +104,19 @@ export default function Home() {
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pb-28 lg:pt-24">
           <div>
-            <p className="hero-in inline-flex items-center gap-2 rounded-full border border-hair bg-white/5 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.28em] text-cyan backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-cyan" />
-              BACKEND ENGINEER
-            </p>
+            <div className="hero-in flex flex-wrap items-center gap-2.5">
+              <p className="inline-flex items-center gap-2 rounded-full border border-hair bg-white/5 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.28em] text-cyan backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-cyan" />
+                BACKEND ENGINEER
+              </p>
+              <a
+                href="/blog"
+                className="chip inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium text-fg-dim transition-colors hover:text-cyan"
+              >
+                <PenIcon className="h-3 w-3" />
+                技術 Blog
+              </a>
+            </div>
             <h1
               className="hero-in mt-5 text-4xl font-bold leading-[1.2] text-fg sm:text-5xl"
               style={{ animationDelay: "80ms" }}
