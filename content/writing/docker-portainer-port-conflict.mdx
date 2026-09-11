@@ -1,0 +1,48 @@
+## 前言
+
+原本在 `docker run` portainer image 時一切正常，但一些原因，必須初始化 Docker，導致原本在本機的所有 container 都要重新建立，而在啟動容器的過程中，出現了錯誤：
+
+```text
+Error: Cannot start service portainer: Ports are not available: listen tcp 0.0.0.0:9000: bind:
+An attempt was made to access a socket in a way forbidden by its access permissions.
+```
+
+依照錯誤訊息可知 port 9000 可能被佔用了，於是在 cmd 下了以下指令，查詢是誰佔用了 port 9000：
+
+```text
+netstat -ano | findstr 0.0.0.0:9000
+```
+
+卻未出現任何佔用訊息！
+
+## 錯誤原因
+
+後來查到了是 port 9000 落在了 Windows TCP Port 保留區段，才導致衝突。
+
+使用以下命令，查詢 Windows TCP Port 保留區段：
+
+```text
+netsh int ipv4 show excludedportrange protocol=tcp
+```
+
+（原文附有截圖，顯示 port 9000 落在了 Windows TCP Port 保留區段，可參考原文連結）
+
+## 解決方法
+
+以下提供兩個解決方法：避開保留區段、重啟 WinNAT 服務，只留下必要的保留區段：
+
+```text
+// 步驟一: 停止服務
+net stop winnat
+
+// 步驟二: 啟動服務
+net start winnat
+
+// 查詢 Windows TCP Port 保留區段
+netsh int ipv4 show excludedportrange protocol=tcp
+```
+
+## 參考
+
+- 【茶包射手筆記】清除 Windows TCP Port 保留區段
+- Windows 如何找到佔用 port 的程式？

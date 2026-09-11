@@ -111,6 +111,24 @@ section[id] {
   color: transparent;
 }
 
+/* ---- article code blocks (rehype-pretty-code / shiki) ----
+   Shiki writes its theme's background/foreground as an inline `style`
+   attribute directly on the generated <pre>, which otherwise wins over
+   the Tailwind classes in mdx-components.tsx — override with !important
+   so blog code blocks sit on the site's own surface instead of shiki's
+   raw theme background. */
+article pre[data-language] {
+  background-color: var(--bg-alt) !important;
+}
+article pre[data-language] [data-line] {
+  border-left: 2px solid transparent;
+  padding-inline: 0.5rem;
+}
+article pre[data-language] [data-highlighted-line] {
+  background: rgba(255, 255, 255, 0.06);
+  border-left-color: var(--violet);
+}
+
 /* subtle interactive chip */
 .chip {
   border: 1px solid var(--hair);

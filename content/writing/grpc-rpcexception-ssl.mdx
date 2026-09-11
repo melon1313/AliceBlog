@@ -1,0 +1,23 @@
+## 前言
+
+開發 gRPC 專案，.NET gRPC Client 與 .NET gRPC Server 溝通時發生了如下錯誤：
+
+```text
+grpc.core.rpcexception: status(statuscode="internal" , detail="error starting
+grpc call. httprequestexception: an error occurred while sending the request
+```
+
+## 原因
+
+由錯誤訊息可知，正當 client 發送請求至 server 時發生了錯誤；由於目前處於開發階段，client 與 server 未使用 SSL/TLS 作為安全傳輸，故 .NET gRPC Client 在呼叫不安全的 gRPC 服務時，若未滿足特定 .NET 版本，將會導致錯誤發生。
+
+## 解決
+
+.NET gRPC Client 在呼叫不安全的 gRPC 服務時，須滿足以下其中的 .NET 版本：
+
+1. .NET 5 或更新版本需要 `Grpc.Net.Client` version 2.32.0 或更新版本。
+2. .NET Core 3.x 需要額外的設定。應用程式必須將 `System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport` 參數設定為 `true`。
+
+## 參考
+
+- 使用 .NET Core 用戶端呼叫不安全的 gRPC 服務

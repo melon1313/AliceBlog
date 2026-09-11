@@ -129,55 +129,82 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-export type WritingItem = { title: string; summary: string; href: string };
+export type WritingItem = {
+  title: string;
+  summary: string;
+  /** 站內文章路由：/blog/{slug}（正文放在 content/writing/{slug}.mdx）。 */
+  slug: string;
+  /** 原文出處（Notion），文章頁底部歸屬連結用。 */
+  sourceUrl: string;
+  tags?: string[];
+};
 
-/** 技術文章精選（Notion：https://aliceeazylearn.notion.site）。 */
+/** 技術文章精選 — 全文已轉載至站內 /blog，原文出處見各筆 sourceUrl。 */
 export const WRITING: WritingItem[] = [
   {
     title: "在 LINQPad 上安裝測試框架：xUnit",
     summary:
       "記錄公司舊專案升級 .NET 6 過程中，如何在 LINQPad 安裝 xUnit，加快重構驗證的效率。",
-    href: "https://aliceeazylearn.notion.site/LINQPad-xUnit-bd36b67f7c6e4c879cda9cd669d5f971",
+    slug: "linqpad-xunit",
+    sourceUrl: "https://aliceeazylearn.notion.site/LINQPad-xUnit-bd36b67f7c6e4c879cda9cd669d5f971",
+    tags: ["xUnit", "Unit Test", "LINQPad"],
   },
   {
     title: "ASP.NET Core 建立設定檔管理員",
     summary:
       "說明如何建立強型別設定檔管理員取代 IConfiguration 字串索引寫法，提升設定維護性。",
-    href: "https://aliceeazylearn.notion.site/ASP-NET-Core-f38d9dc8a95244428987c121fd506f6a",
+    slug: "aspnet-core-settings-manager",
+    sourceUrl: "https://aliceeazylearn.notion.site/ASP-NET-Core-f38d9dc8a95244428987c121fd506f6a",
+    tags: ["ASP.NET Core", ".NET 5", "C#"],
   },
   {
     title: "C# 簡單說－泛型類(1)",
     summary:
       "以情境故事解釋泛型的設計動機，說明如何用泛型解決重複程式碼與型別安全問題。",
-    href: "https://aliceeazylearn.notion.site/C-1-a1815c3ecf6642b4a3cb33f3534a5cb8",
+    slug: "csharp-generics-1",
+    sourceUrl: "https://aliceeazylearn.notion.site/C-1-a1815c3ecf6642b4a3cb33f3534a5cb8",
+    tags: ["C#"],
   },
   {
     title: "經典 RESTful API 設計－(1) REST 介紹",
     summary: "系統性整理 REST 的 6 個架構約束與 RESTful API 設計原則。",
-    href: "https://aliceeazylearn.notion.site/RESTful-API-1-REST-ea660fef07284bcda8afa4b7d42dbd4e",
+    slug: "restful-api-rest-intro",
+    sourceUrl: "https://aliceeazylearn.notion.site/RESTful-API-1-REST-ea660fef07284bcda8afa4b7d42dbd4e",
+    tags: ["C#", "ASP.NET Core"],
   },
   {
     title: "URI、URL、URN 傻傻分不清",
     summary: "釐清 URI/URL/URN 的定義與從屬關係，並舉實例說明正確用法。",
-    href: "https://aliceeazylearn.notion.site/URI-URL-URN-4ad7cb4cb4714fb29c782f143b8b3568",
+    slug: "uri-url-urn",
+    sourceUrl: "https://aliceeazylearn.notion.site/URI-URL-URN-4ad7cb4cb4714fb29c782f143b8b3568",
+    tags: ["HTTP"],
   },
   {
     title: "[踩坑] ASP.Net gRPC 服務路徑錯誤",
     summary:
       "排查 gRPC 專案因 Windows 使用者名稱含中文導致 protoc 編譯失敗的除錯過程。",
-    href: "https://aliceeazylearn.notion.site/ASP-Net-gRPC-protoc-gen-grpc-The-filename-directory-name-or-volume-label-syntax-is-incorrect-57239cfc9f50414bae4ba9494a055dc7",
+    slug: "grpc-protoc-path-error",
+    sourceUrl:
+      "https://aliceeazylearn.notion.site/ASP-Net-gRPC-protoc-gen-grpc-The-filename-directory-name-or-volume-label-syntax-is-incorrect-57239cfc9f50414bae4ba9494a055dc7",
+    tags: ["gRPC", "Debug"],
   },
   {
     title: "[踩坑] Docker portainer port 衝突",
     summary:
       "排查 Docker 容器 port 9000 綁定失敗的原因（落在 Windows TCP 保留區段）與解法。",
-    href: "https://aliceeazylearn.notion.site/Docker-Cannot-start-service-portainer-Ports-are-not-available-listen-tcp-0-0-0-0-9000-8af4e2f75fc84dfa94324449376919da",
+    slug: "docker-portainer-port-conflict",
+    sourceUrl:
+      "https://aliceeazylearn.notion.site/Docker-Cannot-start-service-portainer-Ports-are-not-available-listen-tcp-0-0-0-0-9000-8af4e2f75fc84dfa94324449376919da",
+    tags: ["Docker", "Debug"],
   },
   {
     title: "[踩坑] grpc.core.rpcexception internal",
     summary:
       "記錄 .NET gRPC Client/Server 未用 SSL/TLS 時因版本設定不符導致連線錯誤的修正方式。",
-    href: "https://aliceeazylearn.notion.site/grpc-core-rpcexception-status-statuscode-internal-detail-8ef41134e3c14c36ab05ceab298fed6d",
+    slug: "grpc-rpcexception-ssl",
+    sourceUrl:
+      "https://aliceeazylearn.notion.site/grpc-core-rpcexception-status-statuscode-internal-detail-8ef41134e3c14c36ab05ceab298fed6d",
+    tags: ["Debug", "SSL/TLS", "gRPC", ".NET 5"],
   },
 ];
 
@@ -300,7 +327,7 @@ export function buildResumeContext(): string {
   SKILLS.forEach((grp) => L.push(`- ${grp.label}：${grp.items.join("、")}`));
 
   L.push("", "## 技術文章（Notion）");
-  WRITING.forEach((w) => L.push(`- ${w.title}：${w.summary}（${w.href}）`));
+  WRITING.forEach((w) => L.push(`- ${w.title}：${w.summary}（/blog/${w.slug}）`));
 
   L.push("", "## GitHub 專案");
   SIDE_PROJECTS.forEach((p) => L.push(`- ${p.name}：${p.summary}（${p.href}）`));

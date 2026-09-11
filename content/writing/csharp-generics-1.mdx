@@ -1,0 +1,185 @@
+泛型是類別的藍圖，類別是物件的藍圖。
+
+泛型可以達成跨型別的程式碼複用。
+
+在問什麼是泛型之前，我們先來想一下，為什麼我們需要泛型呢？帶來的好處是什麼呢？
+
+## 為什麼需要泛型呢？
+
+假設一個情境，公司接到撰寫銀行 ATM 功能的案子，小莉是該公司的工程師，她初步寫出了 ATM 的餘額查詢，如下：
+
+```csharp
+public class ATM
+{
+    // 餘額查詢
+    public int BalanceCheck(Card card)
+    {
+        var isValid = Verify(card);
+
+        // (商業邏輯省略)
+
+        // 假設帳密驗證成功，且從 DB 取得了餘額
+        return 1000;
+    }
+
+    // 帳密驗證
+    private bool Verify(Card card)
+    {
+        // 假設驗證成功
+        return true;
+    }
+}
+
+public class Card { // 卡片資訊(id、密碼......)
+}
+```
+
+小莉的 ATM 專案正寫到一半，客戶提出了新的需求：ATM 要分別提供給銀行、郵局、農會使用，目前暫無提供跨行操作（卡片不可跨行使用）。
+
+小莉懵了，毫無頭緒的將 ATM 類別分別改成了 `BankATM`、`PostOfficeATM`、`FarmersAssociationATM`，將 `Card` 類別改成了 `BankCard`、`PostOfficeCard`、`FarmersAssociationCard`，如下：
+
+```csharp
+// (為了凸顯重點，故省略部分程式)
+
+// 銀行 ATM
+public class BankATM
+{
+    // 餘額查詢
+    public int BalanceCheck(BankCard card) { /* (省略) */ }
+
+    // 帳密驗證
+    private bool Verify(BankCard card) { /* (省略) */ }
+}
+
+public class BankCard { /* 卡片資訊 */ }
+
+// 郵局 ATM
+public class PostOfficeATM
+{
+    // 餘額查詢
+    public int BalanceCheck(PostOfficeCard card) { /* (省略) */ }
+
+    // 帳密驗證
+    private bool Verify(PostOfficeCard card) { /* (省略) */ }
+}
+
+public class PostOfficeCard { /* 卡片資訊 */ }
+
+// 農會 ATM
+public class FarmersAssociationATM
+{
+    // 餘額查詢
+    public int BalanceCheck(FarmersAssociationCard card) { /* (省略) */ }
+
+    // 帳密驗證
+    private bool Verify(FarmersAssociationCard card) { /* (省略) */ }
+}
+
+public class FarmersAssociationCard { /* 卡片資訊 */ }
+```
+
+大家有沒有發現，上面的程式碼除了方法的參數型別不同，其餘商業邏輯都一樣，卻重複了三次，若改天需求又新增了漁會 ATM，是否又要 copy/paste 了呢？
+
+經過提點後，聰明的你也許想到了，使用 `object`（所有型別的父類）或以 `Card` 當父類來替換各種機構的卡片（`BankCard`、`PostOfficeCard`……），調整如下：
+
+```csharp
+// ATM
+public class ATM
+{
+    // 餘額查詢
+    public int BalanceCheck(object card) { /* (省略) */ }
+
+    // 帳密驗證
+    private bool Verify(object card) { /* (省略) */ }
+}
+
+// 各機構的卡片 (object 的衍生類別)
+public class BankCard { /* 卡片資訊 */ }
+public class PostOfficeCard { /* 卡片資訊 */ }
+public class FarmersAssociationCard { /* 卡片資訊 */ }
+```
+
+調整後的結果還不錯，但小莉的問題卻油然而生：
+
+- 被實例化的 ATM 物件，可以被不同機構的卡片所操作：這明顯與需求不符（卡片不可跨行操作）
+- 甚至可能被帶入非卡片類的值：將硬幣、糖果紙丟進 ATM，ATM 會卡住壞掉（因為使用了 `object`，所以任何東西都可以丟進 ATM）
+
+那該怎麼辦呢？使用泛型即可解決囉～
+
+## 什麼是泛型？
+
+泛型代表將型別參數化，可以在設計型別或方法的時候，宣告一個以上的型別參數；泛型通常以 `<T>` 或 `<T1, T2, ......>` 表示型別參數。
+
+小莉習慣以 `<TCard>` 來更語意化的表達泛型，如下：
+
+```csharp
+public class ATM<TCard>
+{
+    // 餘額查詢
+    public int BalanceCheck(TCard card)
+    {
+        var isValid = Verify(card);
+
+        // (商業邏輯省略)
+
+        // 假設帳密驗證成功，且從 DB 取得了餘額
+        return 1000;
+    }
+
+    // 帳密驗證
+    private bool Verify(TCard card)
+    {
+        // 假設驗證成功
+        return true;
+    }
+}
+
+// 各機構的卡片 (object 的衍生類別)
+public class BankCard { /* 卡片資訊 */ }
+public class PostOfficeCard { /* 卡片資訊 */ }
+public class FarmersAssociationCard { /* 卡片資訊 */ }
+```
+
+幫 ATM 類別加入了泛型 `<TCard>`，代表該 ATM 是專屬於某機構的卡片使用（如：郵局卡僅能在郵局 ATM 使用）：
+
+```csharp
+// 例子：郵局卡僅能在郵局 ATM 使用
+var card = new PostOfficeCard(); // 郵局卡
+var atm = new ATM<PostOfficeCard>(); // 代表 ATM 只接受郵局卡，其餘卡片都不接受！
+var balance = atm.BalanceCheck(card);
+
+// 若帶入非郵局卡類的物件，則會報錯
+var bankCard = new BankCard();
+balance = atm.BalanceCheck(bankCard); // 錯誤: cannot convert from "BankCard" to "PostOfficeCard"
+balance = atm.BalanceCheck("anything"); // 錯誤: cannot convert from "string" to "PostOfficeCard"
+```
+
+太棒了，小莉順利地用泛型解決了 ATM 跨行操作的問題！
+
+但非卡片類的值（如：硬幣、口香糖…）仍然可以帶入 ATM，導致功能異常！小莉又懵了，如下：
+
+```csharp
+var candy = new Candy(); // 糖果
+var atm = new ATM<Candy>(); // 表示糖果可以帶入 ATM
+var balance = atm.BalanceCheck(candy); // 異常: 編譯或 runtime 可能正常執行，但會有不預期的值(結果)產生！
+```
+
+經過一番折騰，小莉終於找到了解決方法：泛型約束。下篇將要來介紹 C# 簡單說－泛型約束(2)，先來個統整吧～
+
+## 統整
+
+**什麼是泛型？**
+
+- 泛型是指將型別參數化，可以在型別或方法中，宣告一個以上的型別參數，通常以 `<T>` 或 `<T1, T2, ...>` 表達。
+- 類別名稱 `<T>` 並不是用來建立實體的類別，它只是類別的樣板，稱為開放型別（open type）。
+- 泛型帶入指定型別後（如：`ATM<BankCard>`），才能建立實體物件，稱為建構型別（constructed type）。
+- 泛型是類別的藍圖，類別是物件的藍圖。
+
+**泛型帶來的好處？**
+
+- 泛型減少了重複的程式，以樣板的形式，達成跨型別的程式碼複用。
+
+## 參考
+
+- 泛型、型別參數、建構的型別
+- C# 泛型類

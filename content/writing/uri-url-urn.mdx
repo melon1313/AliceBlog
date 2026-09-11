@@ -1,0 +1,70 @@
+想當時還是前期菜鳥的時候，看遍了 URI、URL 與 URN 的文章還是看不懂，分不清的疑問一直放在心底，直到現在累積一點經驗後，終於能分辨其差別，故以此做個紀錄。
+
+## 什麼是 URI、URL、URN 呢？
+
+- **URL（Uniform Resource Location）：統一資源定位符**
+  URL 類似「地址」一般，能將資源位置標識出來，並且包含訪問機制的方式。是網際網路上的標準資源位置，如同網路門牌。
+- **URN（Uniform Resource Name）：統一資源名稱**
+  URN 類似「名字」一般，能將資源的名稱標識出來。URN 標識必須以 `urn:` 為開頭（不區分大小寫）。
+- **URI（Uniform Resource Identifier）：統一資源標識符**
+  在特定規則下，將某資源獨一無二的標識出來。
+
+URL、URN 是 URI 的子集。白話來說，URI 是一個抽象的定義，來標示唯一的資源。URL 和 URN 是 URI 的具體實現：使用位置來定義資源的即是 URL；使用名稱來定義資源的即是 URN。
+
+## 栗子來了？！
+
+是否只看定義描述，還是霧煞煞呢，那就趕緊舉例子吧～
+
+### URL（Uniform Resource Location）：統一資源定位符
+
+URL 是訪問機制與資源位置組成的，一般常見的網路資源是通過 HTTP 訪問資源的所在位置。以下是各種訪問機制的方式：`URL = 訪問機制 + 資源位置`
+
+```text
+// 常見的網路資源訪問機制：HTTP
+http://www.ietf.org/rfc/rfc2396.txt
+https://google.com
+
+// 其他資源訪問機制
+ftp://ftp.is.co.za/rfc/rfc1808.txt
+telnet://192.0.2.16:80/
+jdbc:datadirect:oracle://myserver:1521;sid=testdb
+```
+
+### URN（Uniform Resource Name）：統一資源名稱
+
+URN 是用來識別資源的唯一名稱，就像身分證號碼，可以用來識別一個人，或者 ISBN 可以用來識別是哪一本書。
+
+然而 RFC2141 文中提到，URN 標識必須以 `urn:` 為開頭（不區分大小寫），如下：
+
+```text
+urn:isbn:0451450523
+URN:issn:0167-6423
+```
+
+### URI（Uniform Resource Identifier）：統一資源標識符
+
+URI 是用來標識某特定資源，其標識形式可以是 URL 也可以是 URN（因為 URL 和 URN 是 URI 的子集呦～）：
+
+```text
+ftp://ftp.is.co.za/rfc/rfc1808.txt (also a URL because of the protocol)
+http://www.ietf.org/rfc/rfc2396.txt (also a URL because of the protocol)
+ldap://[2001:db8::7]/c=GB?objectClass?one (also a URL because of the protocol)
+mailto:John.Doe@example.com (also a URL because of the protocol)
+news:comp.infosystems.www.servers.unix (also a URL because of the protocol)
+telnet://192.0.2.16:80/ (also a URL because of the protocol)
+urn:oasis:names:specification:docbook:dtd:xml:4.1.2
+```
+
+## 總結
+
+依上述例子，使用 URI 來通稱是比較保守且安全的，為什麼呢？如果某資源在 `example.com`，在沒有標示訪問機制的情況下，它是 URI，不能說是 URL，因為訪問機制的不同（如：`https://example.com` 與 `ftp://example.com`），可能會返回不同的內容。
+
+所以，依照我的理解，如果在不確定它是 URL 或 URN 的情況下，技術術語使用 URI 來通稱，是不會錯的。
+
+## 參考資源
+
+- RFC3986
+- RFC2141
+- What's the Difference Between a URI and a URL?
+- 統一資源名稱
+- 統一資源定位符
