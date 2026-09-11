@@ -514,11 +514,80 @@ section[id] {
   animation: chevNudge 2.4s ease-in-out infinite;
 }
 
+/* ---- custom cursor (bold gold crosshair + trailing teal ring) ---- */
+@media (pointer: fine) {
+  html[data-custom-cursor],
+  html[data-custom-cursor] * {
+    cursor: none !important;
+  }
+  html[data-custom-cursor] textarea,
+  html[data-custom-cursor] input {
+    cursor: auto !important;
+  }
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0);
+  transition: opacity 0.25s ease;
+}
+/* .cursor-dot — gold diamond marker at the true pointer position */
+.cursor-dot {
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+}
+.cursor-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--cyan);
+  box-shadow: 0 0 10px -1px var(--cyan);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(95, 214, 196, 0.7);
+  transition: opacity 0.25s ease, width 0.22s ease, height 0.22s ease,
+    margin 0.22s ease, background-color 0.22s ease, border-color 0.22s ease;
+}
+.cursor-ready .cursor-dot,
+.cursor-ready .cursor-ring {
+  opacity: 1;
+}
+.cursor-ring.is-hover {
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  background: rgba(95, 214, 196, 0.1);
+  border-color: rgba(95, 214, 196, 0.95);
+}
+.cursor-ring.is-down {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .cursor-ring {
+    transition: opacity 0.2s ease;
   }
   .animate-floaty,
   .hero-in,
@@ -547,5 +616,43 @@ section[id] {
   }
   html {
     scroll-behavior: auto;
+  }
+}
+
+
+/* ---- résumé PDF lightbox — matches the "glass tech" homepage ---- */
+.pdf-lightbox-backdrop {
+  background:
+    radial-gradient(60% 50% at 12% 0%, rgba(95, 214, 196, 0.13), transparent 55%),
+    radial-gradient(55% 55% at 92% 100%, rgba(240, 179, 80, 0.1), transparent 55%),
+    rgba(5, 9, 13, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: pdfLightboxFade 0.2s ease both;
+}
+.pdf-lightbox {
+  /* opaque frosted panel, like .assistant-panel.glass */
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    #0b1519;
+  border: 1px solid var(--hair-strong);
+  box-shadow:
+    0 50px 140px -40px rgba(0, 0, 0, 0.9),
+    0 0 64px -20px rgba(95, 214, 196, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: assistantIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pdfLightboxFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdf-lightbox-backdrop,
+  .pdf-lightbox {
+    animation: none;
   }
 }

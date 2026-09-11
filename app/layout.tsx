@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Noto_Sans_TC, Poppins } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ResumeAssistant } from "@/components/resume-assistant";
+import { Cursor } from "@/components/motion";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main>{children}</main>
         <SiteFooter />
         <ResumeAssistant />
+        <Cursor />
       </body>
     </html>
   );

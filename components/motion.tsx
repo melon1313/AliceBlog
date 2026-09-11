@@ -161,3 +161,88 @@ export function CountUp({
     </span>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/*  Cursor — bold gold crosshair + trailing teal ring (reticle)       */
+/* ------------------------------------------------------------------ */
+
+const CURSOR_INTERACTIVE =
+  'a, button, input, textarea, select, summary, label, [role="button"], .btn, .chip, .assistant-fab, [data-cursor="hover"]';
+
+export function Cursor() {
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const root = document.documentElement;
+    root.dataset.customCursor = "true";
+
+    const ease = prefersReducedMotion() ? 1 : 0.18;
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let rx = mx;
+    let ry = my;
+    let ready = false;
+    let raf = 0;
+
+    const onMove = (e: PointerEvent) => {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!ready) {
+        ready = true;
+        rx = mx;
+        ry = my;
+        document.body.classList.add("cursor-ready");
+      }
+      const target = e.target as Element | null;
+      ring.classList.toggle(
+        "is-hover",
+        !!target?.closest?.(CURSOR_INTERACTIVE),
+      );
+    };
+    const onDown = () => ring.classList.add("is-down");
+    const onUp = () => ring.classList.remove("is-down");
+    const onLeave = () => document.body.classList.remove("cursor-ready");
+    const onEnter = () => {
+      if (ready) document.body.classList.add("cursor-ready");
+    };
+
+    const tick = () => {
+      rx += (mx - rx) * ease;
+      ry += (my - ry) * ease;
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown, { passive: true });
+    window.addEventListener("pointerup", onUp, { passive: true });
+    document.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mouseenter", onEnter);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
+      document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mouseenter", onEnter);
+      delete root.dataset.customCursor;
+      document.body.classList.remove("cursor-ready");
+    };
+  }, []);
+
+  return (
+    <>
+      <div ref={dotRef} className="cursor-dot" aria-hidden />
+      <div ref={ringRef} className="cursor-ring" aria-hidden />
+    </>
+  );
+}

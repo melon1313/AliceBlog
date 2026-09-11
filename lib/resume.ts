@@ -23,7 +23,6 @@ export const HERO = {
 } as const;
 
 export const ABOUT: string[] = [
-  "我們來一起進行一場 Code Review 吧！我準備了一個支付錢包的 POC，裡面運用了 OOP、DDD 等相關架構與技術，我有滿滿的乾貨想和你（貴公司）一起討論交流！",
   "我熱愛拆解複雜的業務邏輯，並專注於核心業務的優化與落地。在開發過程中，我享受將高複雜度的專案抽絲剝繭、化繁為簡的過程；在降低系統複雜度的同時，能更集中資源為公司創造商業價值。",
   "身為一名重視軟體品質與架構的工程師，我始終追求技術與商業目標的平衡。期待能加入重視工程文化、樂於技術交流的團隊，一起打造高效且具備高度可擴展性的系統。",
 ];
@@ -36,19 +35,49 @@ export const STATS: Stat[] = [
   { value: "DDD · CQRS", label: "架構導入與重構實績" },
 ];
 
-export type ProjectGroup = { label: string; points: string[] };
+/** A link whose anchor text is a substring (`label`) of the point's text. */
+export type ProjectLink = { label: string; href: string };
+/** A bullet point — plain text, or text with one inline link on a substring. */
+export type ProjectPoint = string | { text: string; link: ProjectLink };
+/** A supporting image shown under a group; links to `href`, falling back to the group's `href`. */
+export type ProjectImage = { src: string; alt: string; href?: string };
+export type ProjectGroup = {
+  label: string;
+  /** When set, the group label renders as an external link. */
+  href?: string;
+  points: ProjectPoint[];
+  image?: ProjectImage;
+};
 export type Project = {
   org: string;
   role: string;
   summary?: string;
+  /** When set, the project summary renders as an external link. */
+  href?: string;
   groups: ProjectGroup[];
+  /** A supporting image shown under the whole card; links to `image.href ?? project.href`. */
+  image?: ProjectImage;
 };
+
+/** 瑞竣科技「經濟地理資訊系統」報表 PDF（Google Drive）。 */
+const EGIS_DOC_URL =
+  "https://drive.google.com/file/d/1MtS1XQsdJsl3DW5sbZSYoNENYHLkR_yL/view";
+
+/** 永慶房屋 好房網買屋頻道（房屋搜尋與排序）。 */
+const HOUSEFUN_BUY_URL =
+  "https://buy.housefun.com.tw/region/%e5%8f%b0%e5%8c%97%e5%b8%82-%e4%b8%ad%e6%ad%a3%e5%8d%80_c/?od=SeqUp";
+
+/** Plain text of a bullet point, regardless of whether it carries a link. */
+const pointText = (pt: ProjectPoint): string =>
+  typeof pt === "string" ? pt : pt.text;
 
 export const PROJECTS: Project[] = [
   {
     org: "永慶房屋",
     role: "資深軟體工程師",
     summary: "好房網買屋頻道「房屋搜尋與排序」優化",
+    href: HOUSEFUN_BUY_URL,
+    image: { src: "/housefun_search.png", alt: "好房網買屋頻道搜尋結果頁" },
     groups: [
       {
         label: "業務價值與協作",
@@ -79,15 +108,34 @@ export const PROJECTS: Project[] = [
       {
         label: "台水資料清理",
         points: [
-          "處理上千萬筆的台水資料，利用 SQL Server 將水資料進行拆分歸檔，作為報表分析使用。",
+          {
+            text: "處理上千萬筆的台水資料，利用 SQL Server 將水資料進行拆分歸檔，作為報表分析使用。",
+            link: { label: "報表分析", href: EGIS_DOC_URL },
+          },
         ],
+        image: {
+          src: "/egis_water_report.png",
+          alt: "台水資料處理報表片段",
+          href: EGIS_DOC_URL,
+        },
       },
-      { label: "經濟地理資訊系統", points: [] },
+      {
+        label: "經濟地理資訊系統",
+        href: EGIS_DOC_URL,
+        points: [],
+        image: { src: "/egis_report.png", alt: "經濟地理資訊系統報表片段" },
+      },
     ],
   },
 ];
 
-export type TimelineItem = { title: string; org: string; period: string };
+export type TimelineItem = {
+  title: string;
+  org: string;
+  period: string;
+  /** When set, `org` renders as an external link. */
+  href?: string;
+};
 
 export const WORK: TimelineItem[] = [
   { title: "資深軟體工程師", org: "永慶房屋", period: "2022.03 – 2026.08" },
@@ -95,7 +143,12 @@ export const WORK: TimelineItem[] = [
 ];
 
 export const EDUCATION: TimelineItem[] = [
-  { title: "軟體工程師戰鬥營 學員", org: "結訓作品", period: "2018.08 – 2019.02" },
+  {
+    title: "軟體工程師戰鬥營 學員",
+    org: "結訓作品",
+    period: "2018.08 – 2019.02",
+    href: "https://www.youtube.com/watch?v=rnabI-V1zmk",
+  },
   { title: "國立臺東大學", org: "資訊管理學系", period: "2013.09 – 2017.06" },
 ];
 
@@ -138,9 +191,12 @@ export function buildResumeContext(): string {
   L.push("", "## 專案經驗");
   PROJECTS.forEach((pr) => {
     L.push(`### ${pr.org} — ${pr.role}${pr.summary ? `（${pr.summary}）` : ""}`);
+    const prDoc = pr.href ?? pr.image?.href;
+    if (prDoc) L.push(`  參考連結：${prDoc}`);
     pr.groups.forEach((g) => {
-      L.push(`- ${g.label}`);
-      g.points.forEach((pt) => L.push(`  - ${pt}`));
+      const doc = g.href ?? g.image?.href;
+      L.push(`- ${g.label}${doc ? `（文件：${doc}）` : ""}`);
+      g.points.forEach((pt) => L.push(`  - ${pointText(pt)}`));
     });
   });
 
@@ -148,7 +204,9 @@ export function buildResumeContext(): string {
   WORK.forEach((w) => L.push(`- ${w.period}　${w.title}／${w.org}`));
 
   L.push("", "## 學歷");
-  EDUCATION.forEach((e) => L.push(`- ${e.period}　${e.title}／${e.org}`));
+  EDUCATION.forEach((e) =>
+    L.push(`- ${e.period}　${e.title}／${e.org}${e.href ? `（${e.href}）` : ""}`),
+  );
 
   L.push("", "## 技術能力");
   SKILLS.forEach((grp) => L.push(`- ${grp.label}：${grp.items.join("、")}`));

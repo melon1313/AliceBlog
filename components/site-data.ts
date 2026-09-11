@@ -15,7 +15,7 @@ export const CONTACTS = [
   {
     key: "blog",
     label: "技術 Blog ｜ Alice 程式簡單說",
-    href: "/",
+    href: "https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96",
   },
   {
     key: "mail",

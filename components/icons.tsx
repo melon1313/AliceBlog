@@ -74,6 +74,26 @@ export function PhoneIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function DownloadIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
+      <path
+        d="M12 3v11m0 0 4-4m-4 4-4-4"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export const CONTACT_ICONS = {
   github: GithubIcon,
   blog: PenIcon,
@@ -207,7 +227,7 @@ export function CodePanel() {
           ✓
         </span>
         <span className="text-fg">
-          單元測試 <b className="font-semibold text-violet">87 passing</b>
+          單元測試 <b className="font-semibold text-violet">666 passing</b>
         </span>
       </div>
     </div>

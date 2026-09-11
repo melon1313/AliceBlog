@@ -1,6 +1,8 @@
+import Image from "next/image";
 import { Chevron, CodePanel, CONTACT_ICONS } from "@/components/icons";
 import { CONTACTS } from "@/components/site-data";
 import { Parallax, Reveal, CountUp } from "@/components/motion";
+import { DownloadResumeButton } from "@/components/download-resume-button";
 import {
   ABOUT,
   STATS,
@@ -11,7 +13,19 @@ import {
   HERO,
   PROFILE,
   type Project,
+  type ProjectPoint,
+  type TimelineItem,
 } from "@/lib/resume";
+import egisReport from "@/public/egis_report.png";
+import egisWaterReport from "@/public/egis_water_report.png";
+import housefunSearch from "@/public/housefun_search.png";
+
+/** Static imports for résumé images, keyed by the `src` path stored in resume.ts. */
+const RESUME_IMAGES: Record<string, typeof egisReport> = {
+  "/egis_report.png": egisReport,
+  "/egis_water_report.png": egisWaterReport,
+  "/housefun_search.png": housefunSearch,
+};
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -133,6 +147,7 @@ export default function Home() {
               <a href="#contact" className="btn btn-ghost">
                 聯絡我
               </a>
+              <DownloadResumeButton />
             </div>
 
             <dl
@@ -375,14 +390,10 @@ export default function Home() {
               LET&apos;S TALK
             </p>
             <h2 className="mt-4 max-w-2xl text-3xl font-bold leading-snug text-fg sm:text-4xl">
-              想聊聊系統架構，或來場{" "}
-              <span className="text-gradient">Code Review</span>？
+              想聊聊系統架構，或聊聊{" "}
+              <span className="text-gradient">技術</span>？
             </h2>
-            <p className="mt-5 max-w-xl text-[15px] leading-7 text-fg-dim">
-              我準備了一個支付錢包的 POC，運用了 OOP、DDD 等架構與技術，
-              很樂意和你（貴公司）一起討論交流。
-            </p>
-            <p className="mt-3 max-w-xl text-[14px] leading-7 text-fg-faint">
+            <p className="mt-5 max-w-xl text-[14px] leading-7 text-fg-faint">
               想知道這份履歷跟你的 JD 合不合？右下角的 AI 助理可以幫你比對，或直接問它任何關於我的問題。
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -397,6 +408,7 @@ export default function Home() {
               >
                 查看 GitHub
               </a>
+              <DownloadResumeButton />
             </div>
           </Reveal>
 
@@ -448,6 +460,14 @@ function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) 
 }
 
 function ProjectCard({ project }: { project: Project }) {
+  const projectImage = project.image
+    ? RESUME_IMAGES[project.image.src]
+    : undefined;
+  const projectImageHref = project.image?.href ?? project.href;
+  const previewHost = projectImageHref?.startsWith("http")
+    ? new URL(projectImageHref).hostname.replace(/^www\./, "")
+    : null;
+
   return (
     <article className="glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan/40 sm:p-8">
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -457,40 +477,139 @@ function ProjectCard({ project }: { project: Project }) {
       </header>
 
       {project.summary && (
-        <p className="mt-2 border-b border-hair pb-3 text-sm font-medium text-fg-dim">
-          {project.summary}
-        </p>
+        <div className="mt-2 border-b border-hair pb-3 text-sm font-medium text-fg-dim">
+          {project.href ? (
+            <a
+              href={project.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-baseline gap-1 underline decoration-dotted underline-offset-2 transition-colors hover:text-cyan"
+            >
+              {project.summary}
+              <span aria-hidden>↗</span>
+            </a>
+          ) : (
+            project.summary
+          )}
+        </div>
       )}
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {project.groups.map((g) => (
-          <div key={g.label} className="rounded-xl bg-white/[0.03] p-4">
-            <p className="text-[13px] font-semibold text-violet">{g.label}</p>
-            {g.points.length > 0 && (
-              <ul className="mt-2 space-y-2">
-                {g.points.map((pt, i) => (
-                  <li
-                    key={i}
-                    className="relative pl-4 text-[13px] leading-6 text-fg-dim"
-                  >
-                    <span className="absolute left-0 top-[9px] h-1.5 w-1.5 rounded-full border border-cyan" />
-                    {pt}
-                  </li>
-                ))}
-              </ul>
-            )}
+        {project.groups.map((g) => {
+          const groupImage = g.image ? RESUME_IMAGES[g.image.src] : undefined;
+          const imageHref = g.image?.href ?? g.href;
+          return (
+            <div key={g.label} className="rounded-xl bg-white/[0.03] p-4">
+              {g.href ? (
+                <a
+                  href={g.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-baseline gap-1 text-[13px] font-semibold text-violet underline decoration-dotted underline-offset-2 transition-colors hover:text-violet/80"
+                >
+                  {g.label}
+                  <span aria-hidden>↗</span>
+                </a>
+              ) : (
+                <p className="text-[13px] font-semibold text-violet">{g.label}</p>
+              )}
+              {g.points.length > 0 && (
+                <ul className="mt-2 space-y-2">
+                  {g.points.map((pt, i) => (
+                    <li
+                      key={i}
+                      className="relative pl-4 text-[13px] leading-6 text-fg-dim"
+                    >
+                      <span className="absolute left-0 top-[9px] h-1.5 w-1.5 rounded-full border border-cyan" />
+                      <PointText point={pt} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {groupImage && imageHref && (
+                <a
+                  href={imageHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 block overflow-hidden rounded-lg border border-hair transition-colors hover:border-violet/40"
+                >
+                  <Image
+                    src={groupImage}
+                    alt={g.image!.alt}
+                    className="h-auto w-full"
+                    sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
+                  />
+                </a>
+              )}
+            </div>
+          );
+        })}
+
+        {projectImage && projectImageHref && (
+          <div className="rounded-xl bg-white/[0.03] p-4">
+            <p className="text-[13px] font-semibold text-violet">線上成果</p>
+            <a
+              href={projectImageHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/preview mt-2 block overflow-hidden rounded-lg border border-hair bg-bg-alt/60 shadow-lg shadow-black/25 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan/40"
+            >
+              <span className="flex items-center gap-1.5 border-b border-hair bg-white/[0.03] px-2.5 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-white/15" />
+                <span className="h-1.5 w-1.5 rounded-full bg-white/15" />
+                <span className="h-1.5 w-1.5 rounded-full bg-white/15" />
+                {previewHost && (
+                  <span className="ml-1.5 truncate rounded bg-white/5 px-1.5 py-0.5 font-display text-[9px] tracking-wide text-fg-faint">
+                    {previewHost}
+                  </span>
+                )}
+              </span>
+              <span className="relative block aspect-[16/10] w-full overflow-hidden">
+                <Image
+                  src={projectImage}
+                  alt={project.image!.alt}
+                  fill
+                  className="object-cover object-top transition-transform duration-[600ms] ease-out group-hover/preview:scale-[1.04]"
+                  sizes="(min-width: 1024px) 20rem, (min-width: 640px) 45vw, 90vw"
+                />
+                <span className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-bg-alt/80 to-transparent" />
+              </span>
+            </a>
+            <p className="mt-2 text-[11px] leading-5 text-fg-faint">
+              {project.image!.alt}
+            </p>
           </div>
-        ))}
+        )}
       </div>
     </article>
   );
 }
 
-function Timeline({
-  items,
-}: {
-  items: { title: string; org: string; period: string }[];
-}) {
+/** Renders a bullet point, turning `point.link.label` into an external link. */
+function PointText({ point }: { point: ProjectPoint }) {
+  if (typeof point === "string") return <>{point}</>;
+
+  const { text, link } = point;
+  const idx = text.indexOf(link.label);
+  if (idx === -1) return <>{text}</>;
+
+  return (
+    <>
+      {text.slice(0, idx)}
+      <a
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-cyan underline decoration-dotted underline-offset-2 transition-colors hover:text-cyan/80"
+      >
+        {link.label}
+      </a>
+      {text.slice(idx + link.label.length)}
+    </>
+  );
+}
+
+function Timeline({ items }: { items: TimelineItem[] }) {
   return (
     <ul className="space-y-5">
       {items.map((it) => (
@@ -498,7 +617,19 @@ function Timeline({
           <span className="absolute -left-[5px] top-1.5 h-2 w-2 rounded-full bg-gradient-to-br from-cyan to-violet" />
           <p className="text-[11px] tracking-wide text-fg-faint">{it.period}</p>
           <p className="mt-0.5 text-[15px] font-semibold text-fg">{it.title}</p>
-          <p className="text-[13px] text-fg-dim">{it.org}</p>
+          {it.href ? (
+            <a
+              href={it.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-baseline gap-1 text-[13px] text-fg-dim underline decoration-dotted underline-offset-2 transition-colors hover:text-cyan"
+            >
+              {it.org}
+              <span aria-hidden>↗</span>
+            </a>
+          ) : (
+            <p className="text-[13px] text-fg-dim">{it.org}</p>
+          )}
         </li>
       ))}
     </ul>
