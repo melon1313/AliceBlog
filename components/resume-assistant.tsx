@@ -453,7 +453,11 @@ export function ResumeAssistant() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onInputKeyDown}
                 placeholder="輸入問題，Enter 送出、Shift+Enter 換行"
-                className="max-h-28 min-h-[2.4rem] flex-1 resize-none rounded-xl border border-hair bg-white/5 px-3 py-2 text-sm text-fg outline-none placeholder:text-fg-faint focus:border-cyan/50"
+                /* text-base (16px) below sm: iOS Safari auto-zooms the whole
+                   page on focus of any input/textarea under 16px, which is
+                   what actually breaks the layout when the keyboard opens —
+                   not just the panel's own height. */
+                className="max-h-28 min-h-[2.4rem] flex-1 resize-none rounded-xl border border-hair bg-white/5 px-3 py-2 text-base text-fg outline-none placeholder:text-fg-faint focus:border-cyan/50 sm:text-sm"
               />
               {streaming ? (
                 <button
@@ -497,7 +501,7 @@ export function ResumeAssistant() {
             onChange={(e) => setJd(e.target.value)}
             rows={5}
             placeholder="例：我們正在找一位資深後端工程師，需熟悉 .NET、DDD、CQRS、Elasticsearch…"
-            className="mt-2 min-h-[7rem] w-full resize-y rounded-xl border border-hair bg-white/5 px-3 py-2 text-sm text-fg outline-none placeholder:text-fg-faint focus:border-cyan/50"
+            className="mt-2 min-h-[7rem] w-full resize-y rounded-xl border border-hair bg-white/5 px-3 py-2 text-base text-fg outline-none placeholder:text-fg-faint focus:border-cyan/50 sm:text-sm"
           />
           <div className="mt-2 flex items-center justify-between">
             <span className="text-[11px] text-fg-faint">
