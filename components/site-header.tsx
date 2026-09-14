@@ -53,15 +53,27 @@ export function SiteHeader() {
               {n.label}
             </a>
           ))}
-          <a
-            href="https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost !px-4 !py-1.5 !text-sm"
-          >
-            <PenIcon className="h-[1.05em] w-[1.05em]" />
-            技術 Blog
-          </a>
+          {/* Tablet-only in the horizontal nav (this whole <nav> is already
+              md:flex, i.e. tablet + desktop): hidden again at `lg` so it
+              only shows on tablet widths here. Phone gets its own always-
+              shown copy in the md:hidden dropdown below.
+              NB: `lg:hidden` has to live on this wrapper `span`, not on the
+              `<a>` itself — `.btn`'s plain `display: inline-flex` is
+              declared later in globals.css than Tailwind's own utilities
+              (no @layer boundaries here), so at equal specificity it wins
+              the cascade and silently overrides `lg:hidden` on the same
+              element. */}
+          <span className="lg:hidden">
+            <a
+              href="https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost !px-4 !py-1.5 !text-sm"
+            >
+              <PenIcon className="h-[1.05em] w-[1.05em]" />
+              技術 Blog
+            </a>
+          </span>
           <a
             href="https://github.com/melon1313"
             target="_blank"

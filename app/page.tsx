@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Chevron, CodePanel, CONTACT_ICONS } from "@/components/icons";
+import { Chevron, CodePanel, CONTACT_ICONS, PenIcon } from "@/components/icons";
 import { CONTACTS } from "@/components/site-data";
 import { Parallax, Reveal, CountUp } from "@/components/motion";
 import { DownloadResumeButton } from "@/components/download-resume-button";
@@ -149,8 +149,14 @@ export default function Home() {
               <a href="#projects" className="btn btn-primary col-span-2 justify-self-start">
                 查看專案經驗
               </a>
-              <a href="#contact" className="btn btn-ghost">
-                聯絡我
+              <a
+                href="https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost"
+              >
+                <PenIcon className="h-[1.05em] w-[1.05em]" />
+                技術 Blog
               </a>
               <DownloadResumeButton className="btn btn-ghost" />
             </div>
