@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Logo } from "@/components/icons";
+import { Logo, PenIcon } from "@/components/icons";
 import { NAV } from "@/components/site-data";
 
 export function SiteHeader() {
@@ -53,6 +53,15 @@ export function SiteHeader() {
               {n.label}
             </a>
           ))}
+          <a
+            href="https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost !px-4 !py-1.5 !text-sm"
+          >
+            <PenIcon className="h-[1.05em] w-[1.05em]" />
+            技術 Blog
+          </a>
           <a
             href="https://github.com/melon1313"
             target="_blank"
@@ -109,15 +118,27 @@ export function SiteHeader() {
                 {n.label}
               </a>
             ))}
-            <a
-              href="https://github.com/melon1313"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
-              className="btn btn-primary mt-2 !py-2.5"
-            >
-              GitHub
-            </a>
+            <div className="mt-2 flex gap-2">
+              <a
+                href="https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="btn btn-ghost flex-1 !py-2.5"
+              >
+                <PenIcon className="h-[1.05em] w-[1.05em]" />
+                技術 Blog
+              </a>
+              <a
+                href="https://github.com/melon1313"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="btn btn-primary flex-1 !py-2.5"
+              >
+                GitHub
+              </a>
+            </div>
           </nav>
         </div>
       )}

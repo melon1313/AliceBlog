@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Chevron, CodePanel, CONTACT_ICONS, PenIcon } from "@/components/icons";
+import { Chevron, CodePanel, CONTACT_ICONS } from "@/components/icons";
 import { CONTACTS } from "@/components/site-data";
 import { Parallax, Reveal, CountUp } from "@/components/motion";
 import { DownloadResumeButton } from "@/components/download-resume-button";
@@ -109,21 +109,10 @@ export default function Home() {
               grid) refuses to shrink on narrow phones and the whole page
               overflows horizontally instead of wrapping. */}
           <div className="min-w-0">
-            <div className="hero-in flex flex-wrap items-center gap-2.5">
-              <p className="inline-flex items-center gap-2 rounded-full border border-hair bg-white/5 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.28em] text-cyan backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-cyan" />
-                BACKEND ENGINEER
-              </p>
-              <a
-                href="https://aliceeazylearn.notion.site/a4387602954e4e7d99a2da5fbc0d6d7b?v=c57fc954b9714260ac493724bdacab96"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="chip inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium text-fg-dim transition-colors hover:text-cyan"
-              >
-                <PenIcon className="h-3 w-3" />
-                技術 Blog
-              </a>
-            </div>
+            <p className="hero-in inline-flex items-center gap-2 rounded-full border border-hair bg-white/5 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.28em] text-cyan backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-cyan" />
+              BACKEND ENGINEER
+            </p>
             <h1
               className="hero-in mt-5 text-4xl font-bold leading-[1.2] text-fg sm:text-5xl"
               style={{ animationDelay: "80ms" }}
