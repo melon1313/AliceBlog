@@ -665,6 +665,14 @@ article pre[data-language] [data-highlighted-line] {
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
     #0b1519;
+  width: min(94vw, 40rem);
+  /* `dvh` tracks the actually-visible viewport — plain `vh` doesn't, and on
+     tablets where the browser's own UI chrome shows/hides, a `vh`-sized
+     modal can end up taller than what's really visible, pushing the close
+     button (top-right of this card) above the tappable area. `vh` line is
+     the fallback for browsers without `dvh` support. */
+  height: min(92vh, 58rem);
+  height: min(92dvh, 58rem);
   border: 1px solid var(--hair-strong);
   box-shadow:
     0 50px 140px -40px rgba(0, 0, 0, 0.9),

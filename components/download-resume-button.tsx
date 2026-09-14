@@ -59,7 +59,7 @@ function ResumePdfLightbox({ onClose }: { onClose: () => void }) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="pdf-lightbox relative flex h-[min(92vh,58rem)] w-[min(94vw,40rem)] flex-col overflow-hidden rounded-2xl">
+      <div className="pdf-lightbox relative flex flex-col overflow-hidden rounded-2xl">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-cyan/80 to-transparent"
